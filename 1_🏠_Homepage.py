@@ -16,4 +16,4 @@ st.write("""
                 Current supported languages: Russian. 
             """)
 
-subprocess.call('python -m dostoevsky download fasttext-social-network-model')
+subprocess.run(["/mount/src/nlp-text-analysis/model_load.sh"])
