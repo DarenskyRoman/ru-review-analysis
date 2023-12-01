@@ -16,4 +16,4 @@ st.write("""
                 Current supported languages: Russian. 
             """)
 
-print(subprocess.run(["/workspaces/nlp-text-analysis/model_load.sh"]))
+print(subprocess.run(["model_load.sh"]))
