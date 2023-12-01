@@ -1,1 +1,17 @@
-python -m dostoevsky download fasttext-social-network-model
+# Use an official Python runtime as a parent image
+FROM python:3.10-slim-buster
+
+# Set the working directory in the container to /app
+WORKDIR /nlp-text-analysis
+
+# Add the current directory contents into the container at /app
+ADD . /nlp-text-analysis
+
+# Install any needed packages specified in requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Download the fasttext-social-network-model
+RUN python -m dostoevsky download fasttext-social-network-model
+
+# Make port 80 available to the world outside this container
+EXPOSE 80
