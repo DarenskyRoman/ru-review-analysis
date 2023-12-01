@@ -17,11 +17,11 @@ def do_analysis(text):
     result = model.predict(messages, k=2)
     result = list(result[0].keys())[0]
     if result == "positive":
-        result = "emotional tone - positive 😐"
+        result = "emotional tone - positive 🙂"
     if result == "neutral":
         result = "emotional tone - neutral 😐"
     if result == "negative":
-        result = "emotional tone - negative 😐"
+        result = "emotional tone - negative ☹️"
     if result == "speech":
         result = "we didn't find any emotions in this text 🗿"
     if result == "skip":
