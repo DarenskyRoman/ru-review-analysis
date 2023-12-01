@@ -29,7 +29,10 @@ def do_analysis(text):
 
     return result
 
+
+
 tokenizer = RegexTokenizer()
+FastTextSocialNetworkModel.MODEL_PATH = 'models/fasttext-social-network-model.bin'
 model = FastTextSocialNetworkModel(tokenizer=tokenizer)
 
 st.title("Sentiment analysis")

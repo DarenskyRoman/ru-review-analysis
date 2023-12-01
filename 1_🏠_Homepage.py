@@ -1,5 +1,5 @@
 import streamlit as st
-import subprocess
+
 
 st.set_page_config(
     page_title="Home"
@@ -15,5 +15,3 @@ st.write("""
          
                 Current supported languages: Russian. 
             """)
-
-print(subprocess.run(["model_load.sh"]))
