@@ -2,10 +2,10 @@ import streamlit as st
 import torch
 import re
 from pymystem3 import Mystem
+from razdel import tokenize
 from transformers import AutoModelForSequenceClassification
 from transformers import BertTokenizerFast
-from nltk import word_tokenize
-from nltk import download as nltk_load
+
 
 @torch.no_grad()
 def predict(text):
@@ -15,31 +15,23 @@ def predict(text):
     predicted = torch.argmax(predicted, dim=1).numpy()
     return predicted
 
-is_punkt_load = False
-
-def punkt_load():
-    global is_punkt_load
-
-    if is_punkt_load:
-        return
-
-    nltk_load('punkt')
-
-    is_punkt_load = True
-
 def text_prepocessing(text):
 
     text = text.lower()
 
     text = re.sub(r'[^\u0400-\u04FF]', ' ', text)
-    punkt_load()
-    text_tokens = word_tokenize(text)
 
+    text_tokens = list(tokenize(text))
+    text_tokens = [_.text for _ in text_tokens]
+    
+    text_tokens = [word for word in text_tokens if len(word) > 1]
     text_tokens = [stem.lemmatize(token)[0] for token in text_tokens]
     text = ' '.join(text_tokens)
 
     return text
     
+def remove_chars_from_text(text, chars):
+    return "".join([ch for ch in text if ch not in chars])
 
 def do_analysis(text):
 
