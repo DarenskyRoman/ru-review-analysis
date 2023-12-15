@@ -46,7 +46,7 @@ def do_analysis(text):
     return result
 
 
-nltk.download('punkt')
+download('punkt')
 stem = Mystem()
 
 tokenizer = BertTokenizerFast.from_pretrained('blanchefort/rubert-base-cased-sentiment-rurewiews')
