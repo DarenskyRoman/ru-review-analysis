@@ -5,7 +5,6 @@ from pymystem3 import Mystem
 from transformers import AutoModelForSequenceClassification
 from transformers import BertTokenizerFast
 from nltk import word_tokenize
-from nltk import download
 
 @torch.no_grad()
 def predict(text):
@@ -46,7 +45,6 @@ def do_analysis(text):
     return result
 
 
-download('punkt')
 stem = Mystem()
 
 tokenizer = BertTokenizerFast.from_pretrained('blanchefort/rubert-base-cased-sentiment-rurewiews')
