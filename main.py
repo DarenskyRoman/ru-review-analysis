@@ -1,18 +1,20 @@
 import streamlit as st
-import torch
 import re
+from torch import no_grad
+from torch import argmax
+from torch.nn.functional import softmax
 from pymystem3 import Mystem
 from razdel import tokenize
 from transformers import AutoModelForSequenceClassification
 from transformers import BertTokenizerFast
 
 
-@torch.no_grad()
+@no_grad()
 def predict(text):
     inputs = tokenizer(text, max_length=512, padding=True, truncation=True, return_tensors='pt')
     outputs = model(**inputs)
-    predicted = torch.nn.functional.softmax(outputs.logits, dim=1)
-    predicted = torch.argmax(predicted, dim=1).numpy()
+    predicted = softmax(outputs.logits, dim=1)
+    predicted = argmax(predicted, dim=1).numpy()
     return predicted
 
 def text_prepocessing(text):
