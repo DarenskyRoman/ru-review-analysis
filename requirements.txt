@@ -3,3 +3,4 @@ pymystem3==0.2.0
 streamlit==1.28.2
 torch==2.1.2
 transformers==4.36.1
+punkt @ https://github.com/Mottl/ru_punkt
