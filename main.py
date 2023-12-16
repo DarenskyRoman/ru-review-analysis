@@ -54,8 +54,12 @@ def do_analysis(text):
 
 stem = Mystem()
 
-tokenizer = BertTokenizerFast.from_pretrained('blanchefort/rubert-base-cased-sentiment-rurewiews')
-model = AutoModelForSequenceClassification.from_pretrained('blanchefort/rubert-base-cased-sentiment-rurewiews', return_dict=True)
+#tokenizer = BertTokenizerFast.from_pretrained('blanchefort/rubert-base-cased-sentiment-rurewiews')
+#model = AutoModelForSequenceClassification.from_pretrained('blanchefort/rubert-base-cased-sentiment-rurewiews', return_dict=True)
+tokenizer = BertTokenizerFast.from_pretrained('model')
+model = AutoModelForSequenceClassification.from_pretrained('model', return_dict=True)
+
+
 
 st.title("Анализ тональности отзывов о товарах")
 
