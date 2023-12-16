@@ -1,21 +1,26 @@
 import streamlit as st
 import re
-from torch import no_grad
-from torch import argmax
-from torch.nn.functional import softmax
+from transformers import pipeline
 from pymystem3 import Mystem
 from razdel import tokenize
-from transformers import AutoModelForSequenceClassification
-from transformers import BertTokenizerFast
+#from torch import no_grad
+#from torch import argmax
+#from torch.nn.functional import softmax
+#from transformers import AutoModelForSequenceClassification
+#from transformers import BertTokenizerFast
 
 
-@no_grad()
+
+#@no_grad()
+#def predict(text):
+#    inputs = tokenizer(text, max_length=512, padding=True, truncation=True, return_tensors='pt')
+#    outputs = model(**inputs)
+#    predicted = softmax(outputs.logits, dim=1)
+#   predicted = argmax(predicted, dim=1).numpy()
+#    return predicted
+
 def predict(text):
-    inputs = tokenizer(text, max_length=512, padding=True, truncation=True, return_tensors='pt')
-    outputs = model(**inputs)
-    predicted = softmax(outputs.logits, dim=1)
-    predicted = argmax(predicted, dim=1).numpy()
-    return predicted
+    return pipe(text)
 
 def text_prepocessing(text):
 
@@ -56,8 +61,8 @@ stem = Mystem()
 
 #tokenizer = BertTokenizerFast.from_pretrained('blanchefort/rubert-base-cased-sentiment-rurewiews')
 #model = AutoModelForSequenceClassification.from_pretrained('blanchefort/rubert-base-cased-sentiment-rurewiews', return_dict=True)
-tokenizer = BertTokenizerFast.from_pretrained('model')
-model = AutoModelForSequenceClassification.from_pretrained('model', return_dict=True)
+
+pipe = pipeline("text-classification", model="blanchefort/rubert-base-cased-sentiment-rurewiews")
 
 
 
