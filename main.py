@@ -58,11 +58,11 @@ def ngramming(df_positive, df_neutral, df_negative, ngramm_power, ngramm_count):
     df_neutral = text_prepocessing(df_neutral, do_lemm=False)
     df_negative = text_prepocessing(df_negative, do_lemm=False)
     
-    st.write("Позитивные 🙂 n-граммы:\n")
+    st.write(f"Позитивные 🙂 {ngramm_power}-граммы:\n")
     ngramm_extraction(df_positive, ngramm_power, ngramm_count)
-    st.write("Нейтральные 😐 n-граммы:\n")
+    st.write(f"Нейтральные 😐 {ngramm_power}-граммы:\n")
     ngramm_extraction(df_neutral, ngramm_power, ngramm_count)
-    st.write("Негативные ☹️ n-граммы:\n")
+    st.write(f"Негативные ☹️ {ngramm_power}-граммы:\n")
     ngramm_extraction(df_negative, ngramm_power, ngramm_count)
 
 @st.cache_data
