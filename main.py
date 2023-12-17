@@ -114,6 +114,7 @@ def file_analisys(file, reviews_number, column_name, shuffle, do_ngramms):
 
     except:
         st.warning("Не можем прочитать файл ☹️. Всё ли вы ввели верно?")
+        return "Онет"
 
 @st.cache_resource
 def load_model():
@@ -175,13 +176,13 @@ else:
     bupton = st.button(label="Анализировать", disabled=False)
     if bupton:
         file_result = file_analisys(file, reviews_number, column_name, shuffle, do_ngramms)
-        
-        st.write("""
-            ###### Хотите скачать получившийся файл?
-            """)
-        st.download_button(
-            label="Да, хочу",
-            data=file_result,
-            file_name='result.csv',
-            mime='text/csv',
-        )
+        if file_result != "Онет":
+            st.write("""
+                ###### Хотите скачать получившийся файл?
+                """)
+            st.download_button(
+                label="Да, хочу",
+                data=file_result,
+                file_name='result.csv',
+                mime='text/csv',
+            )
