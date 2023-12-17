@@ -18,6 +18,7 @@ def predict(text):
 def text_prepocessing(text, do_lemm=False):
     text = text.lower()
     text = re.sub(r'[^\u0400-\u04FF]', ' ', text)
+    text = text.replace('ё', 'е')
 
     text_tokens = list(tokenize(text))
     text_tokens = [_.text for _ in text_tokens]
@@ -48,7 +49,7 @@ def do_analysis(text):
 
 
 @st.cache_data
-def ngramming(df_positive, df_neutral, df_negative):
+def ngramming(df_positive, df_neutral, df_negative, ngramm_power, ngramm_count):
     df_positive = " ".join(df_positive)
     df_neutral = " ".join(df_neutral)
     df_negative = " ".join(df_negative)
@@ -56,39 +57,24 @@ def ngramming(df_positive, df_neutral, df_negative):
     df_positive = text_prepocessing(df_positive, do_lemm=False)
     df_neutral = text_prepocessing(df_neutral, do_lemm=False)
     df_negative = text_prepocessing(df_negative, do_lemm=False)
-
+    
     st.write("Позитивные 🙂 n-граммы:\n")
-    ngramm_extraction(df_positive)
+    ngramm_extraction(df_positive, ngramm_power, ngramm_count)
     st.write("Нейтральные 😐 n-граммы:\n")
-    ngramm_extraction(df_neutral)
+    ngramm_extraction(df_neutral, ngramm_power, ngramm_count)
     st.write("Негативные ☹️ n-граммы:\n")
-    ngramm_extraction(df_negative)
+    ngramm_extraction(df_negative, ngramm_power, ngramm_count)
 
 @st.cache_data
-def ngramm_extraction(text):
-    one = list(ngrams(text.split(), 1))
-    two = list(ngrams(text.split(), 2))
-    three = list(ngrams(text.split(), 3))
+def ngramm_extraction(text, ngramm_power, ngramm_count):
+    ng = list(ngrams(text.split(), ngramm_power))
 
-    fdist_one = FreqDist(one).most_common(5)
-    fdist_two = FreqDist(two).most_common(5)
-    fdist_three = FreqDist(three).most_common(5)
-
-    fdist_one = ''.join(f" {' '.join(item[0])} - {item[1]} | " for item in fdist_one)
-    fdist_two = ''.join(f" {' '.join(item[0])} - {item[1]} | " for item in fdist_two)
-    fdist_three = ''.join(f" {' '.join(item[0])} - {item[1]} | " for item in fdist_three)
-
-    st.write("Униграммы:")
-    st.write(fdist_one)
-
-    st.write("Биграммы:")
-    st.write(fdist_two)
-
-    st.write("Триграммы:")
-    st.write(fdist_three)
+    fdist_ng = FreqDist(ng).most_common(ngramm_count)
+    fdist_ng = ''.join(f" {' '.join(item[0])} - {item[1]} | " for item in fdist_ng)
+    st.write(fdist_ng)
 
 @st.cache_data
-def file_analisys(file, reviews_number, column_name, shuffle, do_ngramms):
+def file_analisys(file, reviews_number, column_name, shuffle, do_ngramms=False, ngramm_power=None, ngramm_count=None):
     try:
         if shuffle:
             df = pd.read_csv(file, usecols=[column_name]).sample(n=reviews_number)
@@ -108,12 +94,12 @@ def file_analisys(file, reviews_number, column_name, shuffle, do_ngramms):
         st.write(f"Количество негативных ☹️ выражений: {df_negative.count()}")
 
         if do_ngramms:
-            ngramming(df_positive, df_neutral, df_negative)
+            ngramming(df_positive, df_neutral, df_negative, ngramm_power, ngramm_count)
 
         return df.to_csv()
 
     except:
-        st.warning("Не можем прочитать файл ☹️. Всё ли вы ввели верно?")
+        st.warning("Что-то не получается ☹️. Всё ли вы ввели верно?")
         return "Онет"
 
 @st.cache_resource
@@ -156,7 +142,7 @@ st.write("""
         Ещё вы можете загрузить датасет выражений в формате csv.
          
         Программа выведет количество положительных, отрицательных и нейтральных выражений,
-        а также (по желанию) набор часто встречающихся 1, 2 и 3-грамм.
+        а также (по желанию) набор часто встречающихся n-грамм.
         """)
 
 file = st.file_uploader(label="Я загружаю файлы", type="csv")
@@ -168,14 +154,21 @@ st.write("""
 reviews_number = st.number_input(label="Количество выражений для анализа", min_value=1, max_value=1000, value="min", step=1)
 column_name = st.text_input(label="Название столбца с выражениями", value="gugu gaga")
 shuffle = st.checkbox(label="Перемешиваем? P.S. Полезно, если выражения в датасете сгруппированны по тональности (идут подряд)")
-do_ngramms = st.checkbox(label="Выводим n-граммы?")
+do_ngramms = st.checkbox(label="Выводим популярные n-граммы?")
+if do_ngramms:
+    ngramm_power = st.number_input(label="Степень n-грамм", min_value=1, max_value=5, value="min", step=1)
+    ngramm_count = st.number_input(label="Сколько выводим?", min_value=1, max_value=10, value="min", step=1)
 
 if check_prep() == 0:
     st.button(label="Анализировать", disabled=True)
 else:
     bupton = st.button(label="Анализировать", disabled=False)
     if bupton:
-        file_result = file_analisys(file, reviews_number, column_name, shuffle, do_ngramms)
+        if 'ngramm_power' in locals():
+            file_result = file_analisys(file, reviews_number, column_name, shuffle, do_ngramms, ngramm_power, ngramm_count)
+        else:
+            file_result = file_analisys(file, reviews_number, column_name, shuffle)
+
         if file_result != "Онет":
             st.write("""
                 ###### Хотите скачать получившийся файл?
