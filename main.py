@@ -133,7 +133,13 @@ st.write("""
 
 text = st.text_area(label="Я поле ниже", placeholder="Отзыв сюда")
 
-st.write(f"##### Результат: {do_analysis(text)}")
+if text:
+    bopton = st.button(label="Анализировать", disabled=False, key=1)
+    if bopton:
+        st.write(f"##### Результат: {do_analysis(text)}")
+
+else:
+    st.button(label="Анализировать", disabled=True, key=1)
 
 st.write("\n\n")
 st.write("\n\n ##### Много выражений")
@@ -160,9 +166,9 @@ if do_ngramms:
     ngramm_count = st.number_input(label="Сколько выводим?", min_value=1, max_value=10, value="min", step=1)
 
 if check_prep() == 0:
-    st.button(label="Анализировать", disabled=True)
+    st.button(label="Анализировать", disabled=True, key=2)
 else:
-    bupton = st.button(label="Анализировать", disabled=False)
+    bupton = st.button(label="Анализировать", disabled=False, key=2)
     if bupton:
         if 'ngramm_power' in locals():
             file_result = file_analisys(file, reviews_number, column_name, shuffle, do_ngramms, ngramm_power, ngramm_count)
